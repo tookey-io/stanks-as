@@ -23,6 +23,10 @@ export function share(
     return;
   }
 
+  if (sender.nextRound) {
+    return;
+  }
+
   let shareAmount = amount;
   if (sender.points < shareAmount) {
     // then use all action points

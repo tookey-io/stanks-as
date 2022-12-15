@@ -1,4 +1,4 @@
-import { HEALTH_START, POINTS_START, RANGE_START } from '../constants';
+import { HEARTS_START, POINTS_START, RANGE_START } from '../constants';
 import { Place, Player, PlayerJSON } from '../models';
 import { Game } from '../state';
 
@@ -13,7 +13,7 @@ export function spawn(
   const player = new Player(
     place,
     POINTS_START,
-    HEALTH_START,
+    HEARTS_START,
     RANGE_START,
     name,
     userpic,

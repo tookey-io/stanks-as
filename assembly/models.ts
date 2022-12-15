@@ -16,13 +16,15 @@ export class Place {
 }
 
 export class PlayerJSON {
-  id: string = '';
-  position: number[] = [0, 0];
-  range: number = 0;
-  hearts: number = 0;
-  points: number = 0;
-  name: string = '';
-  userpic: string | null = null;
+  id!: string;
+  position!: number[];
+  range!: number;
+  hearts!: number;
+  points!: number;
+  name!: string;
+  userpic!: string;
+  nextRound!: boolean;
+  died!: boolean;
 }
 
 export class Player {
@@ -33,6 +35,8 @@ export class Player {
   range: i8;
   name: string;
   userpic: string;
+  nextRound: boolean;
+  died: boolean;
 
   constructor(
     position: Place,
@@ -49,6 +53,8 @@ export class Player {
     this.range = range;
     this.name = name;
     this.userpic = userpic;
+    this.nextRound = false;
+    this.died = false;
   }
 
   toJSON(): PlayerJSON {
@@ -60,6 +66,8 @@ export class Player {
       points: this.points,
       name: this.name,
       userpic: this.userpic,
+      nextRound: this.nextRound,
+      died: this.died,
     };
   }
 }

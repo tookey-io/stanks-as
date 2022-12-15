@@ -12,6 +12,10 @@ export function invest(game: Game, playerId: PlayerID, amount: i8): void {
     return;
   }
 
+  if (player.nextRound) {
+    return;
+  }
+
   let investAmount = amount;
   if (player.points < investAmount) {
     // then use all action points

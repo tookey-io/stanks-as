@@ -11,6 +11,10 @@ export function move(game: Game, playerId: PlayerID, x: i8, y: i8): void {
     return;
   }
 
+  if (player.nextRound) {
+    return;
+  }
+
   // todo: check place availability
 
   const distance = max(

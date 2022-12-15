@@ -1,4 +1,4 @@
-import { HEALTH_MIN, POINTS_MIN } from '../constants';
+import { HEARTS_MIN, POINTS_MIN } from '../constants';
 import { PlayerID } from '../models';
 import { Game } from '../state';
 
@@ -23,6 +23,10 @@ export function fire(
     return;
   }
 
+  if (attacker.nextRound) {
+    return;
+  }
+
   let fireAmount = amount;
   if (attacker.points < fireAmount) {
     // then use all action points
@@ -32,7 +36,7 @@ export function fire(
   const pointsAfter = attacker.points - fireAmount;
   let healthAfter = victim.hearts - amount;
 
-  if (healthAfter < HEALTH_MIN) healthAfter = HEALTH_MIN;
+  if (healthAfter < HEARTS_MIN) healthAfter = HEARTS_MIN;
 
   game.addLog(`${attackerId} attacks ${victimId} on ${amount}`);
 
