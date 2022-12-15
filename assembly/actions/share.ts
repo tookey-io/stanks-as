@@ -1,8 +1,6 @@
-import { POINTS_MIN } from '../constants';
-import { PlayerID } from '../models';
+import { POINTS_MIN, SHARE_AMOUNT_MIN } from '../constants';
+import { Player, PlayerID } from '../models';
 import { Game } from '../state';
-
-const SHARE_AMOUNT_MIN: i8 = 1;
 
 export function share(
   game: Game,
@@ -13,19 +11,7 @@ export function share(
   const sender = game.players.get(fromId);
   const receiver = game.players.get(toId);
 
-  if (
-    !sender ||
-    !receiver ||
-    amount < SHARE_AMOUNT_MIN ||
-    sender.points <= POINTS_MIN
-  ) {
-    // bad request
-    return;
-  }
-
-  if (sender.nextRound) {
-    return;
-  }
+  validate(sender, receiver, amount);
 
   let shareAmount = amount;
   if (sender.points < shareAmount) {
@@ -34,10 +20,24 @@ export function share(
   }
 
   const senderAfter = sender.points - shareAmount;
-  const receiverAfter = receiver.points + amount;
+  const receiverAfter = receiver.points + shareAmount;
 
-  game.addLog(`${fromId} shares ${amount} to ${toId}`);
+  game.addLog(`${sender.name} shares ${shareAmount} to ${receiver.name}`);
 
   game.setPlayerPoints(sender.id, senderAfter);
   game.setPlayerPoints(receiver.id, receiverAfter);
+}
+
+function validate(sender: Player, receiver: Player, amount: i8): void {
+  if (!sender) throw new Error('Sender not found!');
+  if (!receiver) throw new Error('Receiver not found!');
+  if (sender.nextRound) {
+    throw new Error('Cannot take action until the next round begins');
+  }
+  if (sender.points <= POINTS_MIN) {
+    throw new Error('Insufficient action points for this action');
+  }
+  if (amount < SHARE_AMOUNT_MIN) {
+    throw new Error('The provided share amount is not valid');
+  }
 }

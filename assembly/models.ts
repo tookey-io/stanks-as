@@ -53,7 +53,7 @@ export class Player {
     this.range = range;
     this.name = name;
     this.userpic = userpic;
-    this.nextRound = false;
+    this.nextRound = true;
     this.died = false;
   }
 

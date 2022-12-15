@@ -1,20 +1,11 @@
-import { POINTS_MIN, RANGE_MAX } from '../constants';
-import { PlayerID } from '../models';
+import { INVEST_AMOUNT_MIN, POINTS_MIN, RANGE_MAX } from '../constants';
+import { Player, PlayerID } from '../models';
 import { Game } from '../state';
-
-const INVEST_AMOUNT_MIN: i8 = 1;
 
 export function invest(game: Game, playerId: PlayerID, amount: i8): void {
   const player = game.players.get(playerId);
 
-  if (!player || amount < INVEST_AMOUNT_MIN || player.points <= POINTS_MIN) {
-    // bad request
-    return;
-  }
-
-  if (player.nextRound) {
-    return;
-  }
+  validate(player, amount);
 
   let investAmount = amount;
   if (player.points < investAmount) {
@@ -31,8 +22,21 @@ export function invest(game: Game, playerId: PlayerID, amount: i8): void {
 
   const pointsAfter = player.points - investAmount;
 
-  game.addLog(`${playerId} increases range on ${investAmount}`);
+  game.addLog(`${player.name} increases range on ${investAmount}`);
 
   game.setPlayerRange(playerId, rangeAfter);
   game.setPlayerPoints(playerId, pointsAfter);
+}
+
+function validate(player: Player, amount: i8): void {
+  if (!player) throw new Error('Player not found!');
+  if (player.nextRound) {
+    throw new Error('Cannot take action until the next round begins');
+  }
+  if (player.points <= POINTS_MIN) {
+    throw new Error('Insufficient action points for this action');
+  }
+  if (amount < INVEST_AMOUNT_MIN) {
+    throw new Error('The provided invest amount is not valid');
+  }
 }

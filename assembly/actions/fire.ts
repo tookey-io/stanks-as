@@ -1,8 +1,6 @@
-import { HEARTS_MIN, POINTS_MIN } from '../constants';
-import { PlayerID } from '../models';
+import { FIRE_AMOUNT_MIN, HEARTS_MIN, POINTS_MIN } from '../constants';
+import { Player, PlayerID } from '../models';
 import { Game } from '../state';
-
-const FIRE_AMOUNT_MIN: i8 = 1;
 
 export function fire(
   game: Game,
@@ -13,19 +11,10 @@ export function fire(
   const attacker = game.players.get(attackerId);
   const victim = game.players.get(victimId);
 
-  if (
-    !attacker ||
-    !victim ||
-    amount < FIRE_AMOUNT_MIN ||
-    attacker.points <= POINTS_MIN
-  ) {
-    // bad request
-    return;
-  }
+  validate(attacker, victim, amount);
 
-  if (attacker.nextRound) {
-    return;
-  }
+  // TODO: range validation
+  // The provided fire amount is not within the allowed range
 
   let fireAmount = amount;
   if (attacker.points < fireAmount) {
@@ -38,14 +27,32 @@ export function fire(
 
   if (heartsAfter < HEARTS_MIN) heartsAfter = HEARTS_MIN;
 
-  game.addLog(`${attackerId} attacks ${victimId} on ${amount}`);
+  game.addLog(`${attacker.name} attacks ${victim.name} on ${amount}`);
 
   game.setPlayerHearts(victimId, heartsAfter);
 
   if (heartsAfter === HEARTS_MIN) {
     game.setPlayerDie(victimId);
-    if (victim.points > POINTS_MIN) pointsAfter = pointsAfter + victim.points;
+    game.addLog(`${victim.name} is killed by ${attacker.name}`);
+    if (victim.points > POINTS_MIN) {
+      pointsAfter = pointsAfter + victim.points;
+      game.addLog(`${attacker.name} received ${victim.points} points`);
+    }
   }
 
   game.setPlayerPoints(attackerId, pointsAfter);
+}
+
+function validate(attacker: Player, victim: Player, amount: i8): void {
+  if (!attacker) throw new Error('Attacker not found!');
+  if (!victim) throw new Error('Victim not found!');
+  if (attacker.nextRound) {
+    throw new Error('Cannot take action until the next round begins');
+  }
+  if (attacker.points <= POINTS_MIN) {
+    throw new Error('Insufficient action points for this action');
+  }
+  if (amount < FIRE_AMOUNT_MIN) {
+    throw new Error('The provided fire amount is not valid');
+  }
 }
