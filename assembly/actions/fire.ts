@@ -33,13 +33,19 @@ export function fire(
     fireAmount = attacker.points;
   }
 
-  const pointsAfter = attacker.points - fireAmount;
-  let healthAfter = victim.hearts - amount;
+  let heartsAfter = victim.hearts - amount;
+  let pointsAfter = attacker.points - fireAmount;
 
-  if (healthAfter < HEARTS_MIN) healthAfter = HEARTS_MIN;
+  if (heartsAfter < HEARTS_MIN) heartsAfter = HEARTS_MIN;
 
   game.addLog(`${attackerId} attacks ${victimId} on ${amount}`);
 
-  game.setPlayerHearts(victimId, healthAfter);
+  game.setPlayerHearts(victimId, heartsAfter);
+
+  if (heartsAfter === HEARTS_MIN) {
+    game.setPlayerDie(victimId);
+    if (victim.points > POINTS_MIN) pointsAfter = pointsAfter + victim.points;
+  }
+
   game.setPlayerPoints(attackerId, pointsAfter);
 }

@@ -68,10 +68,6 @@ export class Game {
     const player = this.players.get(playerId);
     player.hearts = hearts;
     this.players.set(playerId, player);
-
-    if (player.hearts === HEARTS_MIN) {
-      this.setPlayerDie(playerId);
-    }
   }
 
   setPlayerRange(playerId: PlayerID, range: i8): void {
