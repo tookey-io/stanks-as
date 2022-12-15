@@ -2,18 +2,33 @@ import { POINTS_MIN, RANGE_MAX } from '../constants';
 import { PlayerID } from '../models';
 import { Game } from '../state';
 
-export function invest(game: Game, whoId: PlayerID, amount: i32): void {
-  const player = game.players.get(whoId);
+const INVEST_AMOUNT_MIN: i8 = 1;
 
-  const rangeAfter = player.range + amount;
-  const pointsAfter = player.points - amount;
+export function invest(game: Game, playerId: PlayerID, amount: i8): void {
+  const player = game.players.get(playerId);
 
-  if (rangeAfter > RANGE_MAX || pointsAfter < POINTS_MIN) {
+  if (!player || amount < INVEST_AMOUNT_MIN || player.points <= POINTS_MIN) {
+    // bad request
     return;
   }
 
-  game.addLog(`${whoId} increases range on ${amount}`);
+  let investAmount = amount;
+  if (player.points < investAmount) {
+    // then use all action points
+    investAmount = player.points;
+  }
 
-  game.setPlayerRange(whoId, rangeAfter);
-  game.setPlayerPoints(whoId, pointsAfter);
+  let rangeAfter = player.range + investAmount;
+  if (rangeAfter > RANGE_MAX) {
+    // then set max range and reduce invest amount
+    rangeAfter = RANGE_MAX;
+    investAmount = RANGE_MAX - player.range;
+  }
+
+  const pointsAfter = player.points - investAmount;
+
+  game.addLog(`${playerId} increases range on ${investAmount}`);
+
+  game.setPlayerRange(playerId, rangeAfter);
+  game.setPlayerPoints(playerId, pointsAfter);
 }

@@ -1,15 +1,5 @@
-import {
-  AppearPoint,
-  DissolveHeart,
-  DissolvePoint,
-  FloatingPoint,
-  Place,
-  Player,
-  PlayerID,
-  PlayerJSON,
-  Tracing,
-  UnattachedPoint,
-} from './models';
+import { HEALTH_MIN, POINTS_MIN, RANGE_MAX, RANGE_MIN } from './constants';
+import { Place, Player, PlayerID, PlayerJSON } from './models';
 
 export class GameState {
   players: PlayerJSON[] = [];
@@ -18,16 +8,12 @@ export class GameState {
 export class Game {
   players: Map<PlayerID, Player> = new Map();
   log: Set<string> = new Set();
-  tracings: Set<Tracing> = new Set();
-  appearPoints: Set<AppearPoint> = new Set();
-  dissolvePoints: Set<DissolvePoint> = new Set();
-  floatingPoints: Set<FloatingPoint> = new Set();
-  dissolveHearts: Set<DissolveHeart> = new Set();
 
   get state(): GameState {
     const players = this.players
       .values()
       .map<PlayerJSON>((value) => value.toJSON());
+
     return {
       players,
     };
@@ -36,11 +22,6 @@ export class Game {
   reset(): void {
     this.players = new Map();
     this.log = new Set();
-    this.tracings = new Set();
-    this.appearPoints = new Set();
-    this.dissolvePoints = new Set();
-    this.floatingPoints = new Set();
-    this.dissolveHearts = new Set();
   }
 
   addLog(msg: string): void {
@@ -48,64 +29,50 @@ export class Game {
   }
 
   addPlayer(player: Player): void {
-    this.players.set(player.name, player);
+    this.players.set(player.id, player);
   }
 
-  addTracePath(from: PlayerID, to: PlayerID, power: i32): void {
-    if (this.players.has(from) && this.players.has(to)) {
-      const tracing = new Tracing(
-        this.players.get(from).position,
-        this.players.get(to).position,
-        power,
-      );
-      this.tracings.add(tracing);
+  setPlayerHearts(playerId: PlayerID, hearts: i8): void {
+    if (!this.players.has(playerId) || hearts < HEALTH_MIN) {
+      // throw
+      return;
     }
+
+    const player = this.players.get(playerId);
+    player.hearts = hearts;
+    this.players.set(playerId, player);
   }
 
-  setPlayerHearts(playerId: PlayerID, hearts: i32): void {
-    if (this.players.has(playerId)) {
-      const player = this.players.get(playerId);
-      player.hearts = hearts;
-      this.players.set(playerId, player);
+  setPlayerRange(playerId: PlayerID, range: i8): void {
+    if (!this.players.has(playerId) || range < RANGE_MIN || range > RANGE_MAX) {
+      // throw
+      return;
     }
+
+    const player = this.players.get(playerId);
+    player.range = range;
+    this.players.set(playerId, player);
   }
 
-  setPlayerRange(playerId: PlayerID, range: i32): void {
-    if (this.players.has(playerId)) {
-      const player = this.players.get(playerId);
-      player.range = range;
-      this.players.set(playerId, player);
+  setPlayerPosition(playerId: PlayerID, x: i8, y: i8): void {
+    if (!this.players.has(playerId)) {
+      // throw
+      return;
     }
+
+    const player = this.players.get(playerId);
+    player.position = new Place(x, y);
+    this.players.set(playerId, player);
   }
 
-  addAppearPoint(at: Place, height: i32): void {
-    const point = new AppearPoint(at, height);
-    this.appearPoints.add(point);
-  }
-
-  setPlayerPosition(playerId: PlayerID, x: i32, y: i32): void {
-    if (this.players.has(playerId)) {
-      const player = this.players.get(playerId);
-      player.position = new Place(x, y);
-      this.players.set(playerId, player);
+  setPlayerPoints(playerId: PlayerID, points: i8): void {
+    if (!this.players.has(playerId) || points < POINTS_MIN) {
+      // throw
+      return;
     }
-  }
 
-  addDissolvePoint(at: Place, height: i32): void {
-    const point = new DissolvePoint(at, height);
-    this.dissolvePoints.add(point);
-  }
-
-  addFloatingPoint(from: UnattachedPoint, to: UnattachedPoint): void {
-    const point = new FloatingPoint(from, to);
-    this.floatingPoints.add(point);
-  }
-
-  setPlayerPoints(playerId: PlayerID, points: i32): void {
-    if (this.players.has(playerId)) {
-      const player = this.players.get(playerId);
-      player.points = points;
-      this.players.set(playerId, player);
-    }
+    const player = this.players.get(playerId);
+    player.points = points;
+    this.players.set(playerId, player);
   }
 }
