@@ -1,0 +1,1 @@
+# Stanks AssemblyScript
