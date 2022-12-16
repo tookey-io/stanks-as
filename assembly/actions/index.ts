@@ -3,3 +3,4 @@ export { share } from './share';
 export { move } from './move';
 export { invest } from './invest';
 export { fire } from './fire';
+export { vote } from './vote';

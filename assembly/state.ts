@@ -71,14 +71,8 @@ export class Game {
     return timeDiff > 0 ? timeDiff : 0;
   }
 
-  isPositionOccupied(x: i8, y: i8): boolean {
-    let isOccupied = false;
-    const players = this.players.values();
-    for (let i = 0; i < players.length; ++i) {
-      const player = players[i];
-      if (player.position.x === x && player.position.y === y) isOccupied = true;
-    }
-    return isOccupied;
+  get jury(): Set<PlayerID> {
+    return this.playersEliminated;
   }
 
   reset(): void {
@@ -198,5 +192,15 @@ export class Game {
     player.died = true;
     this.players.set(playerId, player);
     this.playersEliminated.add(playerId);
+  }
+
+  isPositionOccupied(x: i8, y: i8): boolean {
+    let isOccupied = false;
+    const players = this.players.values();
+    for (let i = 0; i < players.length; ++i) {
+      const player = players[i];
+      if (player.position.x === x && player.position.y === y) isOccupied = true;
+    }
+    return isOccupied;
   }
 }
