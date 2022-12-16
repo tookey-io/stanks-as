@@ -35,4 +35,11 @@ function validate(sender: Player, receiver: Player, amount: i8): void {
   if (sender.points <= POINTS_MIN || sender.points < amount) {
     throw new Error('Insufficient action points for this action');
   }
+  const range = max(
+    abs(sender.position.x - receiver.position.x),
+    abs(sender.position.y - receiver.position.y),
+  );
+  if (sender.range < range) {
+    throw new Error('The provided share amount is not within the range');
+  }
 }

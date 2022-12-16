@@ -121,7 +121,7 @@ describe('Action: Fire', () => {
 
     expect(() => {
       fire(game, player1.id, player2.id, 5);
-    }).toThrow('The provided fire amount is not within the allowed ranged');
+    }).toThrow('The provided fire amount is not within the range');
   });
 
   it("should reduce the victim's hearts by the fire amount", () => {

@@ -53,6 +53,6 @@ function validate(attacker: Player, victim: Player, amount: i8): void {
     abs(attacker.position.y - victim.position.y),
   );
   if (attacker.range < range) {
-    throw new Error('The provided fire amount is not within the allowed range');
+    throw new Error('The provided fire amount is not within the range');
   }
 }
