@@ -7,7 +7,10 @@ export function move(game: Game, playerId: PlayerID, x: i8, y: i8): void {
   const player = game.players.get(playerId);
 
   validate(player);
-  // TODO: check place availability
+
+  if (game.isPositionOccupied(x, y)) {
+    throw new Error('This position is unavailable for movement');
+  }
 
   const distance = max(
     abs(player.position.x - to.x),
@@ -16,9 +19,7 @@ export function move(game: Game, playerId: PlayerID, x: i8, y: i8): void {
   const pointsAfter = player.points - distance;
 
   if (pointsAfter < POINTS_MIN) {
-    throw new Error(
-      `The player does not have the required number of points for this action ${player.points} ${distance} ${pointsAfter}`,
-    );
+    throw new Error('Insufficient action points for this action');
   }
 
   game.addLog(`${player.name} moves on [${to.x},${to.y}]`);

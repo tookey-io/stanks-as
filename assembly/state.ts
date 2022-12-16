@@ -71,6 +71,16 @@ export class Game {
     return timeDiff > 0 ? timeDiff : 0;
   }
 
+  isPositionOccupied(x: i8, y: i8): boolean {
+    let isOccupied = false;
+    const players = this.players.values();
+    for (let i = 0; i < players.length; ++i) {
+      const player = players[i];
+      if (player.position.x === x && player.position.y === y) isOccupied = true;
+    }
+    return isOccupied;
+  }
+
   reset(): void {
     this.rounds = new Set();
     this.winner = null;
