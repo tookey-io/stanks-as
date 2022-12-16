@@ -13,8 +13,13 @@ export function fire(
 
   validate(attacker, victim, amount);
 
-  // TODO: range validation
-  // The provided fire amount is not within the allowed range
+  const range = max(
+    abs(attacker.position.x - victim.position.x),
+    abs(attacker.position.y - victim.position.y),
+  );
+  if (attacker.range < range) {
+    throw new Error(`The provided fire amount is not within the allowed range`);
+  }
 
   let fireAmount = amount;
   if (attacker.points < fireAmount) {
