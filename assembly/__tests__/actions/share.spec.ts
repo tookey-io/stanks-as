@@ -1,8 +1,8 @@
-import { share } from '../actions';
-import { HEARTS_START, POINTS_START, RANGE_START, ROUND_DURATION } from '../constants';
-import { Place, Player } from '../models';
-import { Game, GameConstructor } from '../state';
-import { playersMock } from './mocks';
+import { share } from '../../actions';
+import { HEARTS_START, POINTS_START, RANGE_START, ROUND_DURATION } from '../../constants';
+import { Place, Player } from '../../models';
+import { Game, GameConstructor } from '../../state';
+import { playersMock } from '../mocks';
 
 const options: GameConstructor = {
   minPlayers: 2,

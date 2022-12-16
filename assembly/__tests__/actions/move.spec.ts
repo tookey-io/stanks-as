@@ -1,8 +1,8 @@
-import { invest } from '../actions';
-import { HEARTS_START, POINTS_START, RANGE_MAX, RANGE_START, ROUND_DURATION } from '../constants';
-import { Place, Player } from '../models';
-import { Game, GameConstructor } from '../state';
-import { playersMock } from './mocks';
+import { move } from '../../actions';
+import { HEARTS_START, POINTS_START, RANGE_START, ROUND_DURATION } from '../../constants';
+import { Place, Player } from '../../models';
+import { Game, GameConstructor } from '../../state';
+import { playersMock } from '../mocks';
 
 const options: GameConstructor = {
   minPlayers: 2,
@@ -39,7 +39,7 @@ let player3 = new Player(
   playersMock.get(3).userpic,
 );
 
-describe('Action: Invest', () => {
+describe('Action: Move', () => {
   beforeEach(() => {
     game = new Game(options);
     player1 = new Player(
@@ -73,7 +73,7 @@ describe('Action: Invest', () => {
     game.addPlayer(player2);
 
     expect(() => {
-      invest(game, player3.id, 1);
+      move(game, player3.id, 1, 2);
     }).toThrow('Player not found!');
   });
 
@@ -81,18 +81,8 @@ describe('Action: Invest', () => {
     game.addPlayer(player1);
 
     expect(() => {
-      invest(game, player1.id, 10);
+      move(game, player1.id, 1, 2);
     }).toThrow('Cannot take action until the next round begins');
-  });
-
-  it('should throw an error if the provided invest amount is not valid', () => {
-    game.addPlayer(player1);
-    game.addPlayer(player2);
-    game.startNextRound();
-
-    expect(() => {
-      invest(game, player1.id, 0);
-    }).toThrow('The provided invest amount is not valid');
   });
 
   it('should throw an error if the player has insufficient action points for this action', () => {
@@ -101,45 +91,28 @@ describe('Action: Invest', () => {
     game.startNextRound();
 
     expect(() => {
-      invest(game, player1.id, 10);
+      move(game, player1.id, 10, 2);
     }).toThrow('Insufficient action points for this action');
   });
 
-  it("should increase the player's range by the provided amount and decrease the player's points by the same amount", () => {
+  it('should update the player position and points correctly', () => {
     game.addPlayer(player1);
     game.addPlayer(player2);
     game.startNextRound();
 
-    game.setPlayerPoints(player1.id, 5);
+    move(game, player1.id, 1, 2);
 
-    invest(game, player1.id, 3);
-
-    expect(game.players.get(player1.id).range).toBe(5);
-    expect(game.players.get(player1.id).points).toBe(2);
+    expect(game.players.get(player1.id).position).toStrictEqual(new Place(1, 2));
+    expect(game.players.get(player1.id).points).toBe(0);
   });
 
-  it('should set the range to the maximum allowed value and reduce the invest amount if the updated range exceeds the maximum allowed value', () => {
+  it('should throw an error if the destination position is occupied', () => {
     game.addPlayer(player1);
     game.addPlayer(player2);
     game.startNextRound();
 
-    game.setPlayerPoints(player1.id, 10);
-
-    invest(game, player1.id, 10);
-
-    expect(game.players.get(player1.id).range).toBe(RANGE_MAX);
-    expect(game.players.get(player1.id).points).toBe(7);
-  });
-
-  it('should log the action', () => {
-    game.addPlayer(player1);
-    game.addPlayer(player2);
-    game.startNextRound();
-
-    game.setPlayerPoints(player1.id, 5);
-
-    invest(game, player1.id, 3);
-
-    expect(game.log.values()).toContain(`${player1.name} increases range on 3`);
+    expect(() => {
+      move(game, player1.id, 0, 2);
+    }).toThrow('This position is unavailable for movement');
   });
 });
