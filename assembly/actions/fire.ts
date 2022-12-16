@@ -13,22 +13,8 @@ export function fire(
 
   validate(attacker, victim, amount);
 
-  const range = max(
-    abs(attacker.position.x - victim.position.x),
-    abs(attacker.position.y - victim.position.y),
-  );
-  if (attacker.range < range) {
-    throw new Error(`The provided fire amount is not within the allowed range`);
-  }
-
-  let fireAmount = amount;
-  if (attacker.points < fireAmount) {
-    // then use all action points
-    fireAmount = attacker.points;
-  }
-
   let heartsAfter = victim.hearts - amount;
-  let pointsAfter = attacker.points - fireAmount;
+  let pointsAfter = attacker.points - amount;
 
   if (heartsAfter < HEARTS_MIN) heartsAfter = HEARTS_MIN;
 
@@ -40,6 +26,7 @@ export function fire(
     game.setPlayerDie(victimId);
     game.addLog(`${victim.name} is killed by ${attacker.name}`);
     if (victim.points > POINTS_MIN) {
+      game.setPlayerPoints(victimId, POINTS_MIN);
       pointsAfter = pointsAfter + victim.points;
       game.addLog(`${attacker.name} received ${victim.points} points`);
     }
@@ -54,10 +41,17 @@ function validate(attacker: Player, victim: Player, amount: i8): void {
   if (attacker.nextRound) {
     throw new Error('Cannot take action until the next round begins');
   }
-  if (attacker.points <= POINTS_MIN) {
-    throw new Error('Insufficient action points for this action');
-  }
   if (amount < FIRE_AMOUNT_MIN) {
     throw new Error('The provided fire amount is not valid');
+  }
+  if (attacker.points <= POINTS_MIN || attacker.points < amount) {
+    throw new Error('Insufficient action points for this action');
+  }
+  const range = max(
+    abs(attacker.position.x - victim.position.x),
+    abs(attacker.position.y - victim.position.y),
+  );
+  if (attacker.range < range) {
+    throw new Error('The provided fire amount is not within the allowed range');
   }
 }

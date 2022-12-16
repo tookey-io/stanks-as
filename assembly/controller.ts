@@ -1,11 +1,11 @@
-import { PLAYERS_MIN } from './constants';
+import { PLAYERS_MIN, ROUND_DURATION } from './constants';
 import { Game, GameConstructor, GameState } from './state';
 
 export function gameInstance(): Game {
   const options: GameConstructor = {
     minPlayers: PLAYERS_MIN,
+    roundDuration: ROUND_DURATION,
     roundStartAt: Date.now(),
-    roundDuration: 3600000, // 1 hour
   };
   return new Game(options);
 }

@@ -9,13 +9,14 @@ export class GameState {
   roundStartAt!: string;
   timeLeftInRound!: string;
   players!: PlayerJSON[];
+  winner!: PlayerID | null;
   logs!: string[];
 }
 
 export class GameConstructor {
   minPlayers!: i8;
-  roundStartAt!: i64;
   roundDuration!: i32;
+  roundStartAt!: i64;
 }
 
 export class Game {
@@ -29,7 +30,7 @@ export class Game {
   roundDuration: i32;
   minPlayers: i8;
 
-  log: Set<string> = new Set();
+  log: Map<string, string> = new Map();
 
   constructor(options: GameConstructor) {
     this.roundStartAt = options.roundStartAt;
@@ -50,6 +51,7 @@ export class Game {
       roundStartAt: this.roundStartAt.toString(),
       timeLeftInRound: this.timeLeftInRound.toString(),
       players,
+      winner: this.winner,
       logs,
     };
   }
@@ -79,7 +81,8 @@ export class Game {
     this.rounds = new Set();
     this.winner = null;
     this.players = new Map();
-    this.log = new Set();
+    this.playersEliminated = new Set();
+    this.log = new Map();
   }
 
   startNextRound(): void {
@@ -92,9 +95,14 @@ export class Game {
       );
     }
 
-    if (this.playersCount === 1) {
+    if (this.winner) {
+      throw new Error('The game has ended');
+    }
+
+    if (this.playersCount === 1 && !this.winner) {
       const winner = this.players.values().filter((player) => !player.died);
       this.winner = winner[0].id;
+      this.addLog(`The winner is ${winner[0].name}`);
       return;
     }
 
@@ -119,7 +127,7 @@ export class Game {
   }
 
   addLog(msg: string): void {
-    this.log.add(msg);
+    this.log.set(Date.now().toString(), msg);
   }
 
   addPlayer(player: Player): void {
@@ -128,6 +136,15 @@ export class Game {
     }
 
     this.players.set(player.id, player);
+  }
+
+  removePlayer(playerId: PlayerID): void {
+    if (!this.players.has(playerId)) throw new Error('Player not found!');
+    if (this.gameStarted) {
+      throw new Error('Cannot remove players after the game has started');
+    }
+
+    this.players.delete(playerId);
   }
 
   setPlayerHearts(playerId: PlayerID, hearts: i8): void {

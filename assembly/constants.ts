@@ -1,4 +1,5 @@
 export const PLAYERS_MIN: i8 = 17;
+export const ROUND_DURATION: i32 = 3600000;
 
 export const POINTS_START: i8 = 0;
 export const POINTS_MIN: i8 = 0;

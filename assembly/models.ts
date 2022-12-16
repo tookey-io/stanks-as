@@ -10,17 +10,17 @@ export class Place {
     this.y = y;
   }
 
-  asArray(): number[] {
+  asArray(): i8[] {
     return [this.x, this.y];
   }
 }
 
 export class PlayerJSON {
   id!: string;
-  position!: number[];
-  range!: number;
-  hearts!: number;
-  points!: number;
+  position!: i8[];
+  range!: i8;
+  hearts!: i8;
+  points!: i8;
   name!: string;
   userpic!: string;
   nextRound!: boolean;
