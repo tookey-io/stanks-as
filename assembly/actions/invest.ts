@@ -2,10 +2,16 @@ import { INVEST_AMOUNT_MIN, POINTS_MIN, RANGE_MAX } from '../constants';
 import { Player, PlayerID } from '../models';
 import { Game } from '../state';
 
+/**
+ * Increases the range of a player in a game
+ *
+ * @param {Game} game - The game object
+ * @param {PlayerID} playerId - The id of the player to invest
+ * @param {i8} amount - The amount to invest
+ * @throws {Error} If the player is not found in the game, or if the action is invalid
+ */
 export function invest(game: Game, playerId: PlayerID, amount: i8): void {
-  if (!game.players.has(playerId)) throw new Error('Player not found!');
-
-  const player = game.players.get(playerId);
+  const player = game.getPlayer(playerId);
 
   validate(player, amount);
 

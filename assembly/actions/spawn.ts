@@ -2,6 +2,17 @@ import { HEARTS_START, POINTS_START, RANGE_START } from '../constants';
 import { Place, Player, PlayerJSON } from '../models';
 import { Game } from '../state';
 
+/**
+ * Spawns a new player in a game
+ *
+ * @param {Game} game - The game object
+ * @param {i8} x - The x-coordinate of the player's position
+ * @param {i8} y - The y-coordinate of the player's position
+ * @param {string} name - The name of the player
+ * @param {string} userpic - The URL of the player's avatar image
+ * @returns {PlayerJSON} The new player object in JSON format
+ * @throws {Error} If the position is occupied
+ */
 export function spawn(
   game: Game,
   x: i8,

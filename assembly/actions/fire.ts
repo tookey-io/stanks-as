@@ -2,17 +2,23 @@ import { FIRE_AMOUNT_MIN, HEARTS_MIN, POINTS_MIN } from '../constants';
 import { Player, PlayerID } from '../models';
 import { Game } from '../state';
 
+/**
+ * Fires at a player in a game
+ *
+ * @param {Game} game - The game object
+ * @param {PlayerID} attackerId - The id of the attacking player
+ * @param {PlayerID} victimId - The id of the victim player
+ * @param {i8} amount - The amount of fire to apply
+ * @throws {Error} If the attacker or victim is not found in the game, or if the action is invalid
+ */
 export function fire(
   game: Game,
   attackerId: PlayerID,
   victimId: PlayerID,
   amount: i8,
 ): void {
-  if (!game.players.has(attackerId)) throw new Error('Attacker not found!');
-  if (!game.players.has(victimId)) throw new Error('Victim not found!');
-
-  const attacker = game.players.get(attackerId);
-  const victim = game.players.get(victimId);
+  const attacker = game.getPlayer(attackerId);
+  const victim = game.getPlayer(victimId);
 
   validate(attacker, victim, amount);
 

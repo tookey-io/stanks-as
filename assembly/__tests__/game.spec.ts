@@ -27,8 +27,8 @@ describe('Game scenarios', () => {
     expect(game.playersCount).toBe(2, '0 -> 2');
 
     const playerIds = game.players.keys();
-    const player1 = game.players.get(playerIds[0]);
-    const player2 = game.players.get(playerIds[1]);
+    const player1 = game.getPlayer(playerIds[0]);
+    const player2 = game.getPlayer(playerIds[1]);
 
     expect(player1.nextRound).toBe(true);
     expect(player1.points).toBe(0);
@@ -108,6 +108,6 @@ describe('Game scenarios', () => {
     expect(game.currentRound).toBe(2, 'Has not changed');
 
     expect(game.winner).toBe(player1.id);
-    expect(game.log.values()).toContain(`The winner is ${player1.name}`);
+    expect(game.getLog()).toContain(`The winner is ${player1.name}`);
   });
 });

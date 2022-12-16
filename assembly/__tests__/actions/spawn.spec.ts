@@ -41,6 +41,6 @@ describe('Action: Spawn', () => {
   it('should log the event of spawning a new player', () => {
     spawn(game, x, y, name, userpic);
 
-    expect(game.log.values()).toContain(`Spawn ${name}`);
+    expect(game.getLog()).toContain(`Spawn ${name}`);
   });
 });

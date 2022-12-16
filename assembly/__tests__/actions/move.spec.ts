@@ -102,8 +102,8 @@ describe('Action: Move', () => {
 
     move(game, player1.id, 1, 2);
 
-    expect(game.players.get(player1.id).position).toStrictEqual(new Place(1, 2));
-    expect(game.players.get(player1.id).points).toBe(0);
+    expect(game.getPlayer(player1.id).position).toStrictEqual(new Place(1, 2));
+    expect(game.getPlayer(player1.id).points).toBe(0);
   });
 
   it('should throw an error if the destination position is occupied', () => {

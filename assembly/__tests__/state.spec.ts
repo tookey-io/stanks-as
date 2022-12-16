@@ -63,7 +63,7 @@ describe('Game State', () => {
   it('should add a new player to the game', () => {
     game.addPlayer(player1);
 
-    expect(game.players.get(player1.id)).toBe(player1);
+    expect(game.getPlayer(player1.id)).toBe(player1);
   });
 
   it('should remove a player from the game', () => {
@@ -106,7 +106,7 @@ describe('Game State', () => {
     game.addLog('This is a log message');
 
     expect(game.log.size).toBe(1);
-    expect(game.log.values().includes('This is a log message')).toBeTruthy();
+    expect(game.getLog()).toContain('This is a log message');
   });
 
   it('should start the next round of the game', () => {
@@ -126,25 +126,25 @@ describe('Game State', () => {
     game.addPlayer(player1);
     game.setPlayerPoints(player1.id, 3);
 
-    expect(game.players.get(player1.id).points).toBe(3);
+    expect(game.getPlayer(player1.id).points).toBe(3);
   });
 
   it('should set the "next round" status of a player', () => {
     game.addPlayer(player1);
-    expect(game.players.get(player1.id).nextRound).toBeTruthy();
+    expect(game.getPlayer(player1.id).nextRound).toBeTruthy();
 
-    game.setPlayerRound(player1.id, false);
-    expect(game.players.get(player1.id).nextRound).toBeFalsy();
+    game.confirmMove(player1.id, false);
+    expect(game.getPlayer(player1.id).nextRound).toBeFalsy();
 
-    game.setPlayerRound(player1.id, true);
-    expect(game.players.get(player1.id).nextRound).toBeTruthy();
+    game.confirmMove(player1.id, true);
+    expect(game.getPlayer(player1.id).nextRound).toBeTruthy();
   });
 
   it('should set the "died" status of a player', () => {
     game.addPlayer(player1);
     game.setPlayerDie(player1.id);
 
-    expect(game.players.get(player1.id).died).toBeTruthy();
+    expect(game.getPlayer(player1.id).died).toBeTruthy();
   });
 
   it('should end the game when there is only one player left', () => {

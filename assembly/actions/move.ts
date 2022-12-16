@@ -2,11 +2,18 @@ import { POINTS_MIN } from '../constants';
 import { Place, Player, PlayerID } from '../models';
 import { Game } from '../state';
 
+/**
+ * Moves a player to a new position in a game
+ *
+ * @param {Game} game - The game object
+ * @param {PlayerID} playerId - The id of the player to move
+ * @param {i8} x - The x-coordinate of the new position
+ * @param {i8} y - The y-coordinate of the new position
+ * @throws {Error} If the player is not found in the game, the position is occupied, or if the action is invalid
+ */
 export function move(game: Game, playerId: PlayerID, x: i8, y: i8): void {
-  if (!game.players.has(playerId)) throw new Error('Player not found!');
-
   const to = new Place(x, y);
-  const player = game.players.get(playerId);
+  const player = game.getPlayer(playerId);
 
   validate(player);
 

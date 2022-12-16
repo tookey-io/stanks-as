@@ -2,7 +2,7 @@ import { Player, PlayerID } from '../models';
 import { Game } from '../state';
 
 export function vote(game: Game, playerId: PlayerID, sign: string): void {
-  const player = game.players.get(playerId);
+  const player = game.getPlayer(playerId);
 
   validate(player, sign);
 
@@ -12,7 +12,6 @@ export function vote(game: Game, playerId: PlayerID, sign: string): void {
 }
 
 function validate(player: Player, sign: string): void {
-  if (!player) throw new Error('Player not found!');
   if (!sign || !isValidSignature(sign)) {
     throw new Error('Signature validation failed');
   }

@@ -74,7 +74,7 @@ describe('Action: Share', () => {
 
     expect(() => {
       share(game, player3.id, player2.id, 1);
-    }).toThrow('Sender not found!');
+    }).toThrow('Player not found!');
   });
 
   it('should throw an error if the receiver is not found', () => {
@@ -83,7 +83,7 @@ describe('Action: Share', () => {
 
     expect(() => {
       share(game, player1.id, player3.id, 1);
-    }).toThrow('Receiver not found!');
+    }).toThrow('Player not found!');
   });
 
   it('should throw an error if the sender has confirmed the next round', () => {
@@ -132,7 +132,7 @@ describe('Action: Share', () => {
 
     share(game, player1.id, player2.id, 1);
 
-    expect(game.players.get(player2.id).points).toBe(2);
+    expect(game.getPlayer(player2.id).points).toBe(2);
   });
 
   it("should reduce the sender's points by the share amount", () => {
@@ -142,7 +142,7 @@ describe('Action: Share', () => {
 
     share(game, player1.id, player2.id, 1);
 
-    expect(game.players.get(player1.id).points).toBe(0);
+    expect(game.getPlayer(player1.id).points).toBe(0);
   });
 
   it('should add a log entry for the share', () => {
@@ -152,6 +152,6 @@ describe('Action: Share', () => {
 
     share(game, player1.id, player2.id, 1);
 
-    expect(game.log.values()).toContain(`${player1.name} shares 1 to ${player2.name}`);
+    expect(game.getLog()).toContain(`${player1.name} shares 1 to ${player2.name}`);
   });
 });

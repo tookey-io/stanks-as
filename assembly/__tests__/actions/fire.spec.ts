@@ -73,7 +73,7 @@ describe('Action: Fire', () => {
     game.addPlayer(player2);
     expect(() => {
       fire(game, player3.id, player2.id, 1);
-    }).toThrow('Attacker not found!');
+    }).toThrow('Player not found!');
   });
 
   it('should throw an error if the victim is not found', () => {
@@ -82,7 +82,7 @@ describe('Action: Fire', () => {
 
     expect(() => {
       fire(game, player1.id, player3.id, 1);
-    }).toThrow('Victim not found!');
+    }).toThrow('Player not found!');
   });
 
   it('should throw an error if the attacker has confirmed the next round', () => {
@@ -131,7 +131,7 @@ describe('Action: Fire', () => {
 
     fire(game, player1.id, player2.id, 1);
 
-    expect(game.players.get(player2.id).hearts).toBe(2);
+    expect(game.getPlayer(player2.id).hearts).toBe(2);
   });
 
   it("should reduce the attacker's points by the fire amount", () => {
@@ -141,7 +141,7 @@ describe('Action: Fire', () => {
 
     fire(game, player1.id, player2.id, 1);
 
-    expect(game.players.get(player1.id).points).toBe(0);
+    expect(game.getPlayer(player1.id).points).toBe(0);
   });
 
   it("should set the victim's hearts to the minimum value if it is below the minimum", () => {
@@ -152,7 +152,7 @@ describe('Action: Fire', () => {
 
     fire(game, player1.id, player2.id, 5);
 
-    expect(game.players.get(player2.id).hearts).toBe(HEARTS_MIN);
+    expect(game.getPlayer(player2.id).hearts).toBe(HEARTS_MIN);
   });
 
   it('should set the victim as dead if their hearts reach the minimum', () => {
@@ -163,7 +163,7 @@ describe('Action: Fire', () => {
 
     fire(game, player1.id, player2.id, 5);
 
-    expect(game.players.get(player2.id).died).toBe(true);
+    expect(game.getPlayer(player2.id).died).toBe(true);
   });
 
   it("should add the victim's points to the attacker's points if the victim has points above the minimum when they die", () => {
@@ -176,7 +176,7 @@ describe('Action: Fire', () => {
 
     fire(game, player1.id, player2.id, 3);
 
-    expect(game.players.get(player1.id).points).toBe(6);
+    expect(game.getPlayer(player1.id).points).toBe(6);
   });
 
   it("should not add the victim's points to the attacker's points if the victim has no points above the minimum when they die", () => {
@@ -189,7 +189,7 @@ describe('Action: Fire', () => {
 
     fire(game, player1.id, player2.id, 3);
 
-    expect(game.players.get(player1.id).points).toBe(0);
+    expect(game.getPlayer(player1.id).points).toBe(0);
   });
 
   it('should add a log entry for the attack', () => {
@@ -199,7 +199,7 @@ describe('Action: Fire', () => {
 
     fire(game, player1.id, player2.id, 1);
 
-    expect(game.log.values()).toContain(`${player1.name} attacks ${player2.name} on 1`);
+    expect(game.getLog()).toContain(`${player1.name} attacks ${player2.name} on 1`);
   });
 
   it("should add a log entry for the victim's death", () => {
@@ -211,7 +211,7 @@ describe('Action: Fire', () => {
 
     fire(game, player1.id, player2.id, 3);
 
-    expect(game.log.values()).toContain(`${player2.name} is killed by ${player1.name}`);
+    expect(game.getLog()).toContain(`${player2.name} is killed by ${player1.name}`);
   });
 
   it("should add a log entry for the attacker receiving points from the victim's death", () => {
@@ -224,6 +224,6 @@ describe('Action: Fire', () => {
 
     fire(game, player1.id, player2.id, 3);
 
-    expect(game.log.values()).toContain(`${player1.name} received 5 points`);
+    expect(game.getLog()).toContain(`${player1.name} received 5 points`);
   });
 });

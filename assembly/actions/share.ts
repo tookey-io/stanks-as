@@ -2,17 +2,23 @@ import { POINTS_MIN, SHARE_AMOUNT_MIN } from '../constants';
 import { Player, PlayerID } from '../models';
 import { Game } from '../state';
 
+/**
+ * Shares points between two players in a game
+ *
+ * @param {Game} game - The game object
+ * @param {PlayerID} fromId - The id of the sender player
+ * @param {PlayerID} toId - The id of the receiver player
+ * @param {i8} amount - The amount of points to share
+ * @throws {Error} If the sender or receiver is not found in the game, or if the action is invalid
+ */
 export function share(
   game: Game,
   fromId: PlayerID,
   toId: PlayerID,
   amount: i8,
 ): void {
-  if (!game.players.has(fromId)) throw new Error('Sender not found!');
-  if (!game.players.has(toId)) throw new Error('Receiver not found!');
-
-  const sender = game.players.get(fromId);
-  const receiver = game.players.get(toId);
+  const sender = game.getPlayer(fromId);
+  const receiver = game.getPlayer(toId);
 
   validate(sender, receiver, amount);
 

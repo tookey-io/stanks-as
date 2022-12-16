@@ -114,8 +114,8 @@ describe('Action: Invest', () => {
 
     invest(game, player1.id, 3);
 
-    expect(game.players.get(player1.id).range).toBe(5);
-    expect(game.players.get(player1.id).points).toBe(2);
+    expect(game.getPlayer(player1.id).range).toBe(5);
+    expect(game.getPlayer(player1.id).points).toBe(2);
   });
 
   it('should set the range to the maximum allowed value and reduce the invest amount if the updated range exceeds the maximum allowed value', () => {
@@ -127,8 +127,8 @@ describe('Action: Invest', () => {
 
     invest(game, player1.id, 10);
 
-    expect(game.players.get(player1.id).range).toBe(RANGE_MAX);
-    expect(game.players.get(player1.id).points).toBe(7);
+    expect(game.getPlayer(player1.id).range).toBe(RANGE_MAX);
+    expect(game.getPlayer(player1.id).points).toBe(7);
   });
 
   it('should log the action', () => {
@@ -140,6 +140,6 @@ describe('Action: Invest', () => {
 
     invest(game, player1.id, 3);
 
-    expect(game.log.values()).toContain(`${player1.name} increases range on 3`);
+    expect(game.getLog()).toContain(`${player1.name} increases range on 3`);
   });
 });
