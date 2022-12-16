@@ -8,6 +8,9 @@ export function share(
   toId: PlayerID,
   amount: i8,
 ): void {
+  if (!game.players.has(fromId)) throw new Error('Sender not found!');
+  if (!game.players.has(toId)) throw new Error('Receiver not found!');
+
   const sender = game.players.get(fromId);
   const receiver = game.players.get(toId);
 
@@ -23,8 +26,6 @@ export function share(
 }
 
 function validate(sender: Player, receiver: Player, amount: i8): void {
-  if (!sender) throw new Error('Sender not found!');
-  if (!receiver) throw new Error('Receiver not found!');
   if (sender.nextRound) {
     throw new Error('Cannot take action until the next round begins');
   }

@@ -5,7 +5,7 @@ import { Place, Player, PlayerID, PlayerJSON } from './models';
 
 export class GameState {
   gameStarted!: boolean;
-  currentRound!: number;
+  currentRound!: i8;
   roundStartAt!: string;
   timeLeftInRound!: string;
   players!: PlayerJSON[];
@@ -60,12 +60,12 @@ export class Game {
     return this.currentRound > 0;
   }
 
-  get playersCount(): number {
-    return this.players.size - this.playersEliminated.size;
+  get playersCount(): i8 {
+    return ((this.players.size as i8) - this.playersEliminated.size) as i8;
   }
 
-  get currentRound(): number {
-    return this.rounds.size;
+  get currentRound(): i8 {
+    return this.rounds.size as i8;
   }
 
   get timeLeftInRound(): i64 {
@@ -114,6 +114,8 @@ export class Game {
       this.rounds.add(uuid());
       this.roundStartAt = Date.now();
 
+      this.addLog(`Round ${this.currentRound} has started`);
+
       const players = this.players.values();
       for (let i = 0; i < players.length; ++i) {
         const player = players[i];
@@ -127,7 +129,7 @@ export class Game {
   }
 
   addLog(msg: string): void {
-    this.log.set(Date.now().toString(), msg);
+    this.log.set(`${this.log.size}-${Date.now()}`, msg);
   }
 
   addPlayer(player: Player): void {

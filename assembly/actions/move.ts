@@ -3,6 +3,8 @@ import { Place, Player, PlayerID } from '../models';
 import { Game } from '../state';
 
 export function move(game: Game, playerId: PlayerID, x: i8, y: i8): void {
+  if (!game.players.has(playerId)) throw new Error('Player not found!');
+
   const to = new Place(x, y);
   const player = game.players.get(playerId);
 
@@ -29,7 +31,6 @@ export function move(game: Game, playerId: PlayerID, x: i8, y: i8): void {
 }
 
 function validate(player: Player): void {
-  if (!player) throw new Error('Player not found!');
   if (player.nextRound) {
     throw new Error('Cannot take action until the next round begins');
   }

@@ -3,6 +3,8 @@ import { Player, PlayerID } from '../models';
 import { Game } from '../state';
 
 export function invest(game: Game, playerId: PlayerID, amount: i8): void {
+  if (!game.players.has(playerId)) throw new Error('Player not found!');
+
   const player = game.players.get(playerId);
 
   validate(player, amount);
@@ -24,7 +26,6 @@ export function invest(game: Game, playerId: PlayerID, amount: i8): void {
 }
 
 function validate(player: Player, amount: i8): void {
-  if (!player) throw new Error('Player not found!');
   if (player.nextRound) {
     throw new Error('Cannot take action until the next round begins');
   }

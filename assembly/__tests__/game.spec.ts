@@ -92,7 +92,7 @@ describe('Game scenarios', () => {
 
     expect(player2.died).toBe(true, 'false -> true');
     expect(player2.points).toBe(0, '1 -> 0');
-    expect(player1.points).toBe(player2.points, '0 -> player2.points');
+    expect(player1.points).toBe(1, '0 -> 1');
 
     expect(game.playersCount).toBe(1, '2 -> 1');
     expect(game.playersEliminated.size).toBe(1, '0 -> 1');

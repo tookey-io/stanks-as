@@ -8,6 +8,9 @@ export function fire(
   victimId: PlayerID,
   amount: i8,
 ): void {
+  if (!game.players.has(attackerId)) throw new Error('Attacker not found!');
+  if (!game.players.has(victimId)) throw new Error('Victim not found!');
+
   const attacker = game.players.get(attackerId);
   const victim = game.players.get(victimId);
 
@@ -26,9 +29,9 @@ export function fire(
     game.setPlayerDie(victimId);
     game.addLog(`${victim.name} is killed by ${attacker.name}`);
     if (victim.points > POINTS_MIN) {
-      game.setPlayerPoints(victimId, POINTS_MIN);
       pointsAfter = pointsAfter + victim.points;
       game.addLog(`${attacker.name} received ${victim.points} points`);
+      game.setPlayerPoints(victimId, POINTS_MIN);
     }
   }
 
@@ -36,8 +39,6 @@ export function fire(
 }
 
 function validate(attacker: Player, victim: Player, amount: i8): void {
-  if (!attacker) throw new Error('Attacker not found!');
-  if (!victim) throw new Error('Victim not found!');
   if (attacker.nextRound) {
     throw new Error('Cannot take action until the next round begins');
   }
