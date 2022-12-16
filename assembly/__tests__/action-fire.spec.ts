@@ -39,7 +39,7 @@ let player3 = new Player(
   playersMock.get(3).userpic,
 );
 
-describe('Actions: Fire', () => {
+describe('Action: Fire', () => {
   beforeEach(() => {
     game = new Game(options);
     player1 = new Player(
@@ -199,7 +199,7 @@ describe('Actions: Fire', () => {
 
     fire(game, player1.id, player2.id, 1);
 
-    expect(game.log.values().includes(`${player1.name} attacks ${player2.name} on 1`)).toBe(true);
+    expect(game.log.values()).toContain(`${player1.name} attacks ${player2.name} on 1`);
   });
 
   it("should add a log entry for the victim's death", () => {
@@ -211,7 +211,7 @@ describe('Actions: Fire', () => {
 
     fire(game, player1.id, player2.id, 3);
 
-    expect(game.log.values().includes(`${player2.name} is killed by ${player1.name}`)).toBe(true);
+    expect(game.log.values()).toContain(`${player2.name} is killed by ${player1.name}`);
   });
 
   it("should add a log entry for the attacker receiving points from the victim's death", () => {
@@ -224,6 +224,6 @@ describe('Actions: Fire', () => {
 
     fire(game, player1.id, player2.id, 3);
 
-    expect(game.log.values().includes(`${player1.name} received 5 points`)).toBe(true);
+    expect(game.log.values()).toContain(`${player1.name} received 5 points`);
   });
 });
