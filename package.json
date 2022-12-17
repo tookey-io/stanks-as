@@ -2,22 +2,31 @@
   "name": "stanks-as",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "homepage": "https://github.com/tookey-io",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tookey-io/stanks-as.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tookey-io/stanks-as/issues"
+  },
   "scripts": {
     "test": "asp --verbose",
     "test:ci": "asp --summary",
     "asbuild:debug": "asc assembly/index.ts --target debug",
     "asbuild:release": "asc assembly/index.ts --target release",
     "asbuild": "npm run asbuild:debug && npm run asbuild:release",
-    "start": "npx serve ."
+    "asbuild:watch": "onchange -i 'assembly/**/*' -- npm run asbuild:debug"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@as-pect/cli": "^8.0.1",
-    "assemblyscript": "^0.25.0"
+    "assemblyscript": "^0.25.0",
+    "onchange": "^7.1.0"
   },
   "type": "module",
+  "types": "assembly/index.ts",
   "exports": {
     ".": {
       "import": "./build/release.js",
